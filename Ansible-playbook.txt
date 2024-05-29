@@ -1,0 +1,42 @@
+Ansible Playbook
+MAKE SURE TO ESTABLISH SSH CONNECTION BETWEEN CONTROL AND MANAGED NODE FIRST
+> mkdir /all.yaml  			(make dir for all playbooks)
+> cd /all.yaml		
+> vim 'name of playbook'
+THINGS TO PUT INSIDE 
+---
+  - name: my playbook.usr
+  hosts: all
+  tasks:
+    - name: add a user
+      user:
+        name: john
+        state: present
+        password: $1$6xkom2f.$zWCmNvvQIAeQRhEIUITw3/
+    - name: expire password
+      shell:
+        cmd: chage -d 0 john
+    - name: make a directory
+      file:
+        name: work-john
+        state: directory
+    - name: change ownership of a file and set permissions
+      file:
+        path: work-john
+        owner: john
+        group: john
+        mode: '0655'
+    - name: make a file and set permissions
+      file:
+        path: work-john/file-john
+        state: touch
+        mode: '0777'
+    - name: install package git
+      yum:
+        name: git
+        state: latest
+    - name: add line to file
+      lineinfile:
+        path: work-john/file-john
+        line: 'this is line 1'
+
